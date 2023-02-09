@@ -4,7 +4,6 @@ const {
   addUserHandler,
   updateUserByIdHandler,
   deleteUserByIdHandler,
-
 } = require('../handler/userHandler');
 
 const userRoute = [
