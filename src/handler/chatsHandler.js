@@ -36,8 +36,9 @@ const addChatHandler = (request, h) => {
   const isDateAvailable = chats.filter(
     (chat) => chat.date.substring(0, 10) === date.substring(0, 10),
   ).length > 0;
+  const isTheSameSender = chats.filter((chat) => chat.sender_id === senderId).length > 0;
 
-  if (!isDateAvailable) {
+  if (!isDateAvailable || !isTheSameSender) {
     const newChat = {
       chat_id: chatId, sender_id: senderId, date, message: [],
     };
@@ -45,7 +46,9 @@ const addChatHandler = (request, h) => {
     chats.push(newChat);
 
     const isSuccess = chats.filter((chat) => chat.chat_id === chatId).length > 0;
-    const index = chats.findIndex((chat) => chat.date.substring(0, 10) === date.substring(0, 10));
+    const index = chats.findIndex(
+      (chat) => chat.date.substring(0, 10) === date.substring(0, 10) && chat.sender_id === senderId,
+    );
 
     if (isSuccess) {
       const messageId = nanoid(16);
@@ -66,8 +69,10 @@ const addChatHandler = (request, h) => {
     }
   }
 
-  if (isDateAvailable) {
-    const index = chats.findIndex((chat) => chat.date.substring(0, 10) === date.substring(0, 10));
+  if (isDateAvailable && isTheSameSender) {
+    const index = chats.findIndex(
+      (chat) => chat.date.substring(0, 10) === date.substring(0, 10) && chat.sender_id === senderId,
+    );
 
     if (index !== -1) {
       const messageId = nanoid(16);
