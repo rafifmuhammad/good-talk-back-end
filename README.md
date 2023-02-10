@@ -4,14 +4,13 @@ Soon
 # Demo API
 
 GET All Users
-<a href="http://admserver1.site:5000/users" target="_blank">
 [http://admserver1.site:5000/users](http://admserver1.site:5000/users)
 
 GET Single User
-<a href="http://admserver1.site:5000/users/p309WkYxOrVrNkvO" target="_blank">
+[http://admserver1.site:5000/users/p309WkYxOrVrNkvO](http://admserver1.site:5000/users/p309WkYxOrVrNkvO)
 
 POST
-<a href="http://admserver1.site:5000/users" target="_blank">
+http://admserver1.site:5000/users
 
 data: 
 {
@@ -24,22 +23,22 @@ data:
 }
 
 PUT
-<a href="http://admserver1.site:5000/users/user_id" target="_blank">
+http://admserver1.site:5000/users/user_id
 
 DELETE
-<a href="http://admserver1.site:5000/users/user_id" target="_blank">
+http://admserver1.site:5000/users/user_id
 
 GET All Chats
-<a href="http://admserver1.site:5000/chats" target="_blank">
+[http://admserver1.site:5000/chats](http://admserver1.site:5000/chats)
 
 GET Single Chats
-<a href="http://admserver1.site:5000/chats/chat_id" target="_blank">
+http://admserver1.site:5000/chats/chat_id
 
 GET Single Message
-<a href="http://admserver1.site:5000/chats/messages/message_id" target="_blank">
+http://admserver1.site:5000/chats/messages/message_id
 
 POST a Message
-<a href="http://admserver1.site:5000/chats" target="_blank">
+http://admserver1.site:5000/chats
 
 data:
 {
