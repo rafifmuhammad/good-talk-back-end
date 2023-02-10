@@ -5,6 +5,7 @@ Soon
 
 GET All Users
 <a href="http://admserver1.site:5000/users" target="_blank">
+[http://admserver1.site:5000/users](http://admserver1.site:5000/users)
 
 GET Single User
 <a href="http://admserver1.site:5000/users/p309WkYxOrVrNkvO" target="_blank">
