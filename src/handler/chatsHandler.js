@@ -127,9 +127,33 @@ const deleteChatByIdHandler = (request, h) => {
   return response;
 };
 
+const getAllMessagesByIdHandler = (request, h) => {
+  const { senderId } = request.params;
+  const index = chats.findIndex((chat) => chat.sender_id === senderId);
+
+  if (index !== -1) {
+    return {
+      status: 'success',
+      data: {
+        date: chats[index].date,
+        messages: chats[index].message,
+      },
+    };
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'pesan tidak ditemukan',
+  });
+
+  response.code(404);
+  return response;
+};
+
 module.exports = {
   getAllChatsHandler,
   getChatByIdHandler,
   addChatHandler,
   deleteChatByIdHandler,
+  getAllMessagesByIdHandler,
 };

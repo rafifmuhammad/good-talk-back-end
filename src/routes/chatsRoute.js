@@ -3,6 +3,7 @@ const {
   getChatByIdHandler,
   addChatHandler,
   deleteChatByIdHandler,
+  getAllMessagesByIdHandler,
 } = require('../handler/chatsHandler');
 
 const chatRoute = [
@@ -15,6 +16,11 @@ const chatRoute = [
     method: 'GET',
     path: '/chats/{chatId}',
     handler: getChatByIdHandler,
+  },
+  {
+    method: 'GET',
+    path: '/chats/messages/{senderId}',
+    handler: getAllMessagesByIdHandler,
   },
   {
     method: 'POST',
