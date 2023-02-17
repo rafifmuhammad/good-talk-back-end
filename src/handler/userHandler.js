@@ -39,6 +39,15 @@ const addUserHandler = (request, h) => {
     const response = h.response({
       status: 'fail',
       message: 'field tidak boleh kosong',
+      data: {
+        "user_id": userId,
+        "username": username,
+        "email": email,
+        "name": name,
+        "password": password,
+        "date_of_birth": dateOfBirth,
+        "phone_number": phone_number,
+      }
     });
 
     response.code(500);
