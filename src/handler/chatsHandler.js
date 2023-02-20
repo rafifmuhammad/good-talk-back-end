@@ -1,12 +1,30 @@
 const { nanoid } = require('nanoid');
 const chats = require('../data/chats');
 
-const getAllChatsHandler = () => ({
-  status: 'success',
-  data: {
-    chats,
-  },
-});
+const getAllChatsHandler = (request) => {
+  const { userId } = request.query;
+  if (userId) {
+    return ({
+      status: 'success',
+      data: {
+        chats: chats.filter((chat) => chat.user_id === userId)
+          .map((chat) => ({
+            id: chat.id,
+            chat_id: chat.chat_id,
+            sender_id: chat.sender_id,
+            messages: chat.message,
+          })),
+      },
+    });
+  }
+
+  return ({
+    status: 'success',
+    data: {
+      chats,
+    },
+  });
+};
 
 const getChatByIdHandler = (request, h) => {
   const { chatId } = request.params;
@@ -29,7 +47,7 @@ const getChatByIdHandler = (request, h) => {
 };
 
 const addChatHandler = (request, h) => {
-  const { senderId, text } = request.payload;
+  const { senderId, text, userId } = request.payload;
   const chatId = nanoid(16);
   const date = new Date().toISOString();
 
@@ -40,7 +58,7 @@ const addChatHandler = (request, h) => {
 
   if (!isDateAvailable || !isTheSameSender) {
     const newChat = {
-      chat_id: chatId, sender_id: senderId, date, message: [],
+      chat_id: chatId, sender_id: senderId, date, user_id: userId, message: [],
     };
 
     chats.push(newChat);
@@ -127,26 +145,27 @@ const deleteChatByIdHandler = (request, h) => {
   return response;
 };
 
+// fix get all chat by sender id
 const getAllMessagesByIdHandler = (request, h) => {
   const { senderId } = request.params;
-  const index = chats.findIndex((chat) => chat.sender_id === senderId);
 
-  if (index !== -1) {
+  const data = chats.filter((chat) => chat.sender_id === senderId);
+  const isSuccess = chats.filter((chat) => chat.sender_id === senderId).length > 0;
+
+  if (isSuccess) {
     return {
       status: 'success',
       data: {
-        date: chats[index].date,
-        messages: chats[index].message,
+        chats: data,
       },
     };
   }
 
   const response = h.response({
     status: 'fail',
-    message: 'pesan tidak ditemukan',
+    message: 'chat tidak ditemukan',
   });
 
-  response.code(404);
   return response;
 };
 

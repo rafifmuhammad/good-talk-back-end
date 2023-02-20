@@ -40,14 +40,14 @@ const addUserHandler = (request, h) => {
       status: 'fail',
       message: 'field tidak boleh kosong',
       data: {
-        "user_id": userId,
-        "username": username,
-        "email": email,
-        "name": name,
-        "password": password,
-        "date_of_birth": dateOfBirth,
-        "phone_number": phone_number,
-      }
+        user_id: userId,
+        username,
+        email,
+        name,
+        password,
+        date_of_birth: dateOfBirth,
+        phone_number: phoneNumber,
+      },
     });
 
     response.code(500);
