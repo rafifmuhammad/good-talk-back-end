@@ -2,7 +2,8 @@ const { nanoid } = require('nanoid');
 const chats = require('../data/chats');
 
 const getAllChatsHandler = (request) => {
-  const { userId } = request.query;
+  const { userId, senderIdA, receiverId } = request.query;
+
   if (userId) {
     return ({
       status: 'success',
@@ -12,7 +13,23 @@ const getAllChatsHandler = (request) => {
             id: chat.id,
             chat_id: chat.chat_id,
             sender_id: chat.sender_id,
-            messages: chat.message,
+            messages: chat.messages,
+          })),
+      },
+    });
+  }
+
+  if (senderIdA && receiverId) {
+    return ({
+      status: 'success',
+      data: {
+        chats: chats.filter((chat) => chat.sender_id === senderIdA
+        || chat.receiverId === receiverId)
+          .map((chat) => ({
+            id: chat.id,
+            user_id: chat.user_id,
+            date: chat.date,
+            messages: chat.messages,
           })),
       },
     });
@@ -47,35 +64,45 @@ const getChatByIdHandler = (request, h) => {
 };
 
 const addChatHandler = (request, h) => {
-  const { senderId, text, userId } = request.payload;
+  const {
+    senderId, receiverId, text, userId,
+  } = request.payload;
   const chatId = nanoid(16);
   const date = new Date().toISOString();
 
   const isDateAvailable = chats.filter(
     (chat) => chat.date.substring(0, 10) === date.substring(0, 10),
   ).length > 0;
-  const isTheSameSender = chats.filter((chat) => chat.sender_id === senderId).length > 0;
+  const isTheSameSender = chats.filter((chat) => chat.sender_id === senderId
+  && chat.receiver_id === receiverId).length > 0;
 
   if (!isDateAvailable || !isTheSameSender) {
     const newChat = {
-      chat_id: chatId, sender_id: senderId, date, user_id: userId, message: [],
+      chat_id: chatId,
+      sender_id: senderId,
+      receiver_id: receiverId,
+      date,
+      user_id: userId,
+      messages: [],
     };
 
     chats.push(newChat);
 
     const isSuccess = chats.filter((chat) => chat.chat_id === chatId).length > 0;
     const index = chats.findIndex(
-      (chat) => chat.date.substring(0, 10) === date.substring(0, 10) && chat.sender_id === senderId,
+      (chat) => chat.date.substring(0, 10) === date.substring(0, 10)
+      && chat.sender_id === senderId
+      && chat.receiver_id === receiverId,
     );
 
     if (isSuccess) {
       const messageId = nanoid(16);
       const createdAt = new Date().toISOString();
       const newMessage = {
-        message_id: messageId, text, created_at: createdAt,
+        user_id: userId, message_id: messageId, text, created_at: createdAt,
       };
 
-      chats[index].message.push(newMessage);
+      chats[index].messages.push(newMessage);
 
       const response = h.response({
         status: 'success',
@@ -89,17 +116,19 @@ const addChatHandler = (request, h) => {
 
   if (isDateAvailable && isTheSameSender) {
     const index = chats.findIndex(
-      (chat) => chat.date.substring(0, 10) === date.substring(0, 10) && chat.sender_id === senderId,
+      (chat) => chat.date.substring(0, 10) === date.substring(0, 10)
+      && chat.sender_id === senderId
+      && chat.receiver_id === receiverId,
     );
 
     if (index !== -1) {
       const messageId = nanoid(16);
       const createdAt = new Date().toISOString();
       const newMessage = {
-        message_id: messageId, text, created_at: createdAt,
+        user_id: userId, message_id: messageId, text, created_at: createdAt,
       };
 
-      chats[index].message.push(newMessage);
+      chats[index].messages.push(newMessage);
 
       const response = h.response({
         status: 'success',
